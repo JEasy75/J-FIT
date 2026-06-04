@@ -1,0 +1,24 @@
+{
+  "name": "DHA-50 Base Camp",
+  "short_name": "DHA-50",
+  "description": "DHA-50 Base Camp training log \u00b7 durability, hypertrophy, armor for the 50-year-old athlete.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#14110f",
+  "theme_color": "#14110f",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
