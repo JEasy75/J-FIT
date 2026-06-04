@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#14110f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DHA-50">
+<meta name="description" content="DHA-50 Base Camp training log · durability, hypertrophy, armor for the 50-year-old athlete.">
+<title>DHA-50 Base Camp · Training Log</title>
+
+
+
+<style>
+  :root{
+    --bg:#14110f;--bg2:#1c1916;--panel:#221e1a;--panel2:#2a2521;
+    --line:#3a332c;--line2:#4a4137;--txt:#ece6dd;--muted:#9a9085;--faint:#6f665c;
+    --amber:#e89c3c;--amber-dim:#b9802f;--oxblood:#b2402e;--steel:#7d8a92;
+    --green:#7fae6a;--run:#6fa3c4;--shadow:0 10px 30px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 100% -10%, rgba(232,156,60,.06), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(178,64,46,.06), transparent 55%),
+      var(--bg);
+    color:var(--txt);font-family:'Barlow',system-ui,sans-serif;line-height:1.45;
+    min-height:100vh;-webkit-font-smoothing:antialiased;
+  }
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 14px 120px;}
+
+  header.top{position:sticky;top:0;z-index:30;
+    background:linear-gradient(180deg, rgba(20,17,15,.98), rgba(20,17,15,.9));
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+    margin:0 -14px 0;padding:12px 16px 8px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .mark{font-family:'Oswald';font-weight:700;font-size:12px;letter-spacing:.16em;
+    color:var(--bg);background:var(--amber);padding:6px 9px;border-radius:3px;box-shadow:0 2px 0 var(--amber-dim);}
+  .titleblock h1{font-family:'Oswald';font-weight:600;letter-spacing:.03em;font-size:19px;margin:0;line-height:1;}
+  .titleblock p{margin:2px 0 0;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);}
+  .datepill{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+  .datepill input{background:var(--panel);border:1px solid var(--line2);color:var(--txt);
+    font-family:'Spline Sans Mono';font-size:12px;border-radius:6px;padding:6px 8px;}
+  .datepill span{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);}
+
+  /* Week selector */
+  .weekbar{display:flex;align-items:center;gap:8px;margin-top:10px;}
+  .weeklabel{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);flex:0 0 auto;}
+  .weeks{display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;flex:1;}
+  .weeks::-webkit-scrollbar{display:none;}
+  .wk{flex:0 0 auto;border:1px solid var(--line);background:var(--bg2);border-radius:7px;
+    padding:6px 11px;cursor:pointer;font-family:'Oswald';font-weight:600;font-size:14px;
+    letter-spacing:.04em;color:var(--muted);transition:.15s;}
+  .wk.active{border-color:var(--amber);color:var(--amber);background:linear-gradient(180deg,var(--panel2),var(--panel));}
+  .wk.deload{}
+  .gatebtn{flex:0 0 auto;border:1px solid var(--oxblood);color:var(--oxblood);background:transparent;
+    border-radius:7px;padding:6px 9px;font-family:'Oswald';font-weight:500;font-size:11px;letter-spacing:.05em;cursor:pointer;}
+  .gatebtn:hover{background:rgba(178,64,46,.12);}
+
+  /* Day tabs */
+  .days{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;margin:0 -14px;
+    padding-left:14px;padding-right:14px;scrollbar-width:none;}
+  .days::-webkit-scrollbar{display:none;}
+  .day{flex:0 0 auto;border:1px solid var(--line);background:var(--bg2);border-radius:8px;
+    padding:7px 11px;cursor:pointer;min-width:70px;text-align:center;transition:.15s;}
+  .day .d{font-family:'Oswald';font-weight:600;font-size:14px;letter-spacing:.05em;}
+  .day .l{font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-top:1px;line-height:1.15;}
+  .day.active{border-color:var(--amber);background:linear-gradient(180deg,var(--panel2),var(--panel));box-shadow:var(--shadow);}
+  .day.active .d{color:var(--amber);}
+  .day.active .l{color:var(--txt);}
+  .day.run.active{border-color:var(--run);}
+  .day.run.active .d{color:var(--run);}
+
+  /* Decision gate panel */
+  .gate{display:none;border:1px solid var(--oxblood);background:linear-gradient(180deg,#241a18,#1c1614);
+    border-radius:12px;padding:14px 15px;margin-top:14px;}
+  .gate.open{display:block;}
+  .gate h3{font-family:'Oswald';font-weight:600;font-size:16px;margin:0 0 4px;letter-spacing:.04em;color:var(--oxblood);}
+  .gate p.sub{font-size:12px;color:var(--muted);margin:0 0 10px;}
+  .gate .col{margin-bottom:10px;}
+  .gate .col h4{font-family:'Oswald';font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 5px;color:var(--txt);}
+  .gate ul{margin:0;padding-left:16px;}
+  .gate li{font-size:12.5px;color:var(--muted);margin-bottom:3px;}
+  .gate .grad h4{color:var(--green);}
+  .gate .red h4{color:var(--oxblood);}
+
+  .dayhead{margin:18px 0 4px;}
+  .dayhead .kick{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber);font-weight:600;}
+  .dayhead .kick.run{color:var(--run);}
+  .dayhead h2{font-family:'Oswald';font-weight:600;font-size:25px;margin:3px 0 4px;letter-spacing:.02em;}
+  .dayhead .focus{color:var(--muted);font-size:13px;}
+  .weeknote{margin-top:9px;font-size:12px;color:var(--txt);border-left:3px solid var(--amber);
+    background:var(--bg2);border-radius:0 8px 8px 0;padding:8px 11px;}
+  .weeknote b{color:var(--amber);font-weight:600;}
+  .weeknote.deload{border-left-color:var(--oxblood);}
+  .weeknote.deload b{color:var(--oxblood);}
+
+  .block{margin-top:18px;}
+  .block-h{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid var(--line);}
+  .block-h .ix{font-family:'Spline Sans Mono';font-size:11px;color:var(--bg);background:var(--steel);border-radius:4px;padding:2px 6px;font-weight:600;}
+  .block-h h3{font-family:'Oswald';font-weight:500;font-size:14px;letter-spacing:.07em;text-transform:uppercase;margin:0;}
+  .block-h .min{margin-left:auto;font-family:'Spline Sans Mono';font-size:11px;color:var(--faint);}
+  .block.tri .block-h .ix{background:var(--amber);}
+  .block.cond .block-h .ix{background:var(--oxblood);}
+  .block.run .block-h .ix{background:var(--run);}
+
+  .ex{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:11px;margin-bottom:9px;overflow:hidden;}
+  .ex.runcard{border-color:rgba(111,163,196,.4);}
+  .ex-top{display:flex;align-items:flex-start;gap:11px;padding:12px 13px;cursor:pointer;}
+  .ex-letter{font-family:'Oswald';font-weight:600;font-size:12px;color:var(--amber);border:1px solid var(--line2);
+    border-radius:6px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;}
+  .runcard .ex-letter{color:var(--run);}
+  .ex-main{flex:1;min-width:0;}
+  .ex-name{font-weight:600;font-size:15px;letter-spacing:.01em;}
+  .ex-rx{font-family:'Spline Sans Mono';font-size:11.5px;color:var(--steel);margin-top:3px;display:flex;flex-wrap:wrap;gap:4px 12px;}
+  .ex-rx b{color:var(--amber);font-weight:600;}
+  .runcard .ex-rx b{color:var(--run);}
+  .ex-why{font-size:12px;color:var(--muted);margin-top:5px;font-style:italic;}
+  .ex-cta{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px;margin-top:1px;}
+  .logcount{font-family:'Spline Sans Mono';font-size:10px;color:var(--faint);min-height:12px;}
+  .logcount.has{color:var(--green);}
+  .chev{transition:.2s;color:var(--faint);font-size:13px;}
+  .ex.open .chev{transform:rotate(90deg);color:var(--amber);}
+
+  .logger{display:none;border-top:1px solid var(--line);padding:11px 13px 13px;background:var(--bg);}
+  .ex.open .logger{display:block;}
+  .setrow{display:flex;flex-wrap:wrap;align-items:flex-end;gap:7px 10px;padding:9px 0;border-bottom:1px solid rgba(58,51,44,.5);}
+  .setrow:last-of-type{border-bottom:none;}
+  .setrow .sn{font-family:'Spline Sans Mono';font-size:12px;color:var(--amber);font-weight:600;width:16px;text-align:center;align-self:center;}
+  .field{display:flex;flex-direction:column;gap:3px;}
+  .field>label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);padding-left:2px;}
+  .field input{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:6px;
+    padding:8px 6px;font-family:'Spline Sans Mono';font-size:13px;text-align:center;width:52px;}
+  .field input:focus{outline:none;border-color:var(--amber);background:#2f2924;}
+  .field input::placeholder{color:var(--faint);}
+  .inunit{display:flex;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding-right:7px;}
+  .inunit:focus-within{border-color:var(--amber);background:#2f2924;}
+  .inunit input{border:none;background:transparent;width:50px;text-align:right;padding-right:4px;}
+  .inunit span{font-size:11px;color:var(--faint);font-family:'Spline Sans Mono';}
+  .timegrp{display:flex;align-items:center;gap:1px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:0 6px;}
+  .timegrp:focus-within{border-color:var(--amber);background:#2f2924;}
+  .timegrp input{border:none;background:transparent;width:26px;text-align:center;padding:8px 0;font-family:'Spline Sans Mono';font-size:13px;color:var(--txt);}
+  .timegrp span{font-size:10px;color:var(--faint);padding:0 1px;}
+  .setrow .del{align-self:center;margin-left:auto;}
+  .del{background:none;border:none;color:var(--faint);font-size:17px;cursor:pointer;padding:0;line-height:1;}
+  .del:hover{color:var(--oxblood);}
+  .noteinput{width:100%;margin-top:2px;background:var(--panel2);border:1px solid var(--line);color:var(--txt);
+    border-radius:6px;padding:8px 9px;font-family:'Barlow';font-size:13px;}
+  .noteinput:focus{outline:none;border-color:var(--amber);}
+  .logbtns{display:flex;gap:8px;margin-top:10px;}
+  .btn{font-family:'Oswald';font-weight:500;letter-spacing:.07em;text-transform:uppercase;font-size:12px;
+    border-radius:7px;padding:9px 13px;cursor:pointer;border:1px solid var(--line2);background:var(--panel2);color:var(--txt);transition:.15s;}
+  .btn:hover{border-color:var(--amber);}
+  .btn.add{background:var(--amber);color:var(--bg);border-color:var(--amber);box-shadow:0 2px 0 var(--amber-dim);}
+  .btn.add:hover{filter:brightness(1.05);}
+  .saved{font-size:11px;color:var(--green);margin-left:auto;align-self:center;font-family:'Spline Sans Mono';opacity:0;transition:.3s;}
+  .saved.show{opacity:1;}
+  .hist{margin-top:10px;border-top:1px dashed var(--line);padding-top:9px;}
+  .hist h5{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:0 0 6px;}
+  .histrow{font-family:'Spline Sans Mono';font-size:11.5px;color:var(--muted);display:flex;gap:9px;flex-wrap:wrap;
+    align-items:center;padding:4px 0;border-bottom:1px solid rgba(58,51,44,.5);}
+  .histrow .hd{color:var(--steel);min-width:54px;}
+  .histrow .wkpill{color:var(--bg);background:var(--amber-dim);border-radius:3px;padding:0 5px;font-size:10px;font-weight:600;}
+  .histrow .hn{color:var(--faint);font-style:italic;font-family:'Barlow';}
+
+  .pnote{font-size:12.5px;color:var(--muted);padding:9px 13px;border-left:2px solid var(--amber-dim);
+    background:var(--bg2);border-radius:0 8px 8px 0;margin-bottom:9px;}
+  .pnote.run{border-left-color:var(--run);}
+  .pnote b{color:var(--txt);}
+
+  /* Readiness check-in */
+  .ready{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line2);
+    border-radius:12px;padding:14px 15px;margin-bottom:14px;}
+  .ready-h{display:flex;align-items:center;gap:9px;margin-bottom:3px;}
+  .ready-h h3{font-family:'Oswald';font-weight:600;font-size:16px;letter-spacing:.04em;margin:0;}
+  .ready-h .donepill{margin-left:auto;font-family:'Spline Sans Mono';font-size:10px;color:var(--green);}
+  .ready .sub{font-size:11.5px;color:var(--faint);margin:0 0 12px;}
+  .slider{margin-bottom:13px;}
+  .slider .slab{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+  .slider .slab .nm{font-size:13px;font-weight:600;color:var(--txt);}
+  .slider .slab .val{font-family:'Spline Sans Mono';font-size:11px;}
+  .slider .ends{display:flex;justify-content:space-between;font-size:9.5px;color:var(--faint);margin-top:3px;letter-spacing:.02em;}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;
+    background:linear-gradient(90deg,var(--green),#caa83a 50%,var(--oxblood));outline:none;margin:0;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;
+    background:var(--txt);border:3px solid var(--bg);box-shadow:0 2px 6px rgba(0,0,0,.5);cursor:pointer;}
+  input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--txt);
+    border:3px solid var(--bg);box-shadow:0 2px 6px rgba(0,0,0,.5);cursor:pointer;}
+  .verdict{border-radius:10px;padding:12px 13px;margin-top:4px;border:1px solid var(--line2);}
+  .verdict .vtag{font-family:'Oswald';font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;}
+  .verdict .vtxt{font-size:12.5px;color:var(--muted);margin-top:4px;}
+  .verdict.green{background:rgba(127,174,106,.1);border-color:rgba(127,174,106,.5);}
+  .verdict.green .vtag{color:var(--green);}
+  .verdict.amber{background:rgba(232,156,60,.1);border-color:rgba(232,156,60,.5);}
+  .verdict.amber .vtag{color:var(--amber);}
+  .verdict.red{background:rgba(178,64,46,.12);border-color:rgba(178,64,46,.55);}
+  .verdict.red .vtag{color:var(--oxblood);}
+  .ready .savebar{display:flex;gap:8px;margin-top:11px;align-items:center;}
+  .ready .rhist{font-family:'Spline Sans Mono';font-size:10.5px;color:var(--faint);margin-top:9px;}
+  .ready .rhist b{color:var(--steel);font-weight:600;}
+
+  footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  footer .note{font-size:11px;color:var(--faint);flex:1;min-width:160px;}
+  .ghost{background:transparent;border:1px solid var(--line);color:var(--muted);}
+  .ghost:hover{border-color:var(--oxblood);color:var(--txt);}
+
+  .units{display:flex;align-items:center;gap:8px;}
+  .units .ulbl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);}
+  .unittoggle{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;}
+  .unittoggle button{background:var(--bg2);border:none;color:var(--muted);padding:7px 12px;cursor:pointer;
+    font-family:'Oswald';font-weight:500;font-size:12px;letter-spacing:.05em;}
+  .unittoggle button.on{background:var(--amber);color:var(--bg);}
+
+  /* editing */
+  .editbtn{background:none;border:1px solid var(--line);color:var(--faint);cursor:pointer;font-size:12px;
+    border-radius:6px;padding:3px 6px;line-height:1;}
+  .editbtn:hover{color:var(--amber);border-color:var(--amber-dim);}
+  .custtag{font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--steel);
+    border:1px solid var(--line2);border-radius:3px;padding:1px 5px;margin-left:7px;vertical-align:middle;}
+  .daytools{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+
+  .modal{position:fixed;inset:0;z-index:80;display:none;align-items:flex-end;justify-content:center;
+    background:rgba(0,0,0,.62);backdrop-filter:blur(3px);}
+  .modal.open{display:flex;}
+  .sheet{background:var(--bg2);border:1px solid var(--line2);border-radius:16px 16px 0 0;width:100%;max-width:760px;
+    max-height:90vh;overflow-y:auto;padding:18px 16px 26px;box-shadow:0 -10px 40px rgba(0,0,0,.55);}
+  @media(min-width:620px){.modal{align-items:center;}.sheet{border-radius:16px;}}
+  .sheet h3{font-family:'Oswald';font-weight:600;font-size:19px;margin:0 0 6px;letter-spacing:.03em;}
+  .sheet label{display:block;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin:13px 0 5px;}
+  .sheet input.t{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:8px;
+    padding:11px 12px;font-family:'Barlow';font-size:15px;}
+  .sheet input.t:focus{outline:none;border-color:var(--amber);}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;}
+  .chip{border:1px solid var(--line2);background:var(--bg);color:var(--muted);border-radius:20px;padding:8px 15px;
+    font-size:12px;cursor:pointer;font-family:'Oswald';letter-spacing:.04em;}
+  .chip.on{background:var(--amber);color:var(--bg);border-color:var(--amber);}
+  .seg{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden;}
+  .seg button{background:var(--bg);border:none;color:var(--muted);padding:8px 13px;font-family:'Oswald';font-size:12px;
+    cursor:pointer;letter-spacing:.04em;}
+  .seg button.on{background:var(--steel);color:var(--bg);}
+  .mbtns{display:flex;gap:8px;margin-top:22px;align-items:center;}
+  .mbtns .spacer{flex:1;}
+  .btn.danger{border-color:var(--oxblood);color:var(--oxblood);background:transparent;}
+  .btn.danger:hover{background:rgba(178,64,46,.14);}
+
+  @media(max-width:480px){
+    .field input{width:46px;}
+    .inunit input{width:44px;}
+    .dayhead h2{font-size:22px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="mark">DHA·50</span>
+      <div class="titleblock">
+        <h1>Base Camp</h1>
+        <p>4-Week Reentry + 2-Week Bridge</p>
+      </div>
+      <div class="datepill">
+        <span>Session date</span>
+        <input type="date" id="sessionDate">
+      </div>
+    </div>
+    <div class="weekbar">
+      <span class="weeklabel">Week</span>
+      <div class="weeks" id="weeks"></div>
+      <button class="gatebtn" id="gateBtn">Wk-4 Gate</button>
+    </div>
+    <div class="days" id="days"></div>
+  </header>
+
+  <div class="gate" id="gate"></div>
+  <div id="content"></div>
+
+  <footer>
+    <div class="units">
+      <span class="ulbl">Units</span>
+      <div class="unittoggle" id="wToggle"><button data-u="lb">lb</button><button data-u="kg">kg</button></div>
+      <div class="unittoggle" id="dToggle"><button data-u="mi">mi</button><button data-u="km">km</button></div>
+    </div>
+    <span class="note">Absorption &gt; completion. Progress only when soreness, calves/Achilles, energy, gait and lower-body recovery are clean. Runna owns your runs; this plan protects recovery around them. Logs save on this device — export to back up.</span>
+    <button class="btn ghost" id="exportBtn">Export Data</button>
+    <button class="btn ghost" id="importBtn">Import</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+  </footer>
+</div>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <h3 id="mTitle">Edit Exercise</h3>
+    <label>Exercise name</label>
+    <input class="t" id="mName" placeholder="e.g. Incline DB Press">
+    <label>Target / prescription</label>
+    <input class="t" id="mRx" placeholder="e.g. 3×8-10">
+    <label>Apply target to</label>
+    <div class="seg" id="mScope">
+      <button data-s="all" class="on">All weeks</button>
+      <button data-s="week">This week only</button>
+    </div>
+    <label>Effort / RIR <span style="text-transform:none;letter-spacing:0;color:var(--faint)">(optional)</span></label>
+    <input class="t" id="mRir" placeholder="e.g. 2-3 RIR">
+    <label>Note <span style="text-transform:none;letter-spacing:0;color:var(--faint)">(optional)</span></label>
+    <input class="t" id="mWhy" placeholder="Why it's here / a cue to remember">
+    <label>Track these fields</label>
+    <div class="chips" id="mFields">
+      <span class="chip" data-f="w">Weight</span>
+      <span class="chip" data-f="r">Reps</span>
+      <span class="chip" data-f="d">Distance</span>
+      <span class="chip" data-f="t">Time</span>
+    </div>
+    <div class="mbtns">
+      <button class="btn danger" id="mRemove">Remove</button>
+      <button class="btn ghost" id="mReset" style="display:none">Reset</button>
+      <span class="spacer"></span>
+      <button class="btn" id="mCancel">Cancel</button>
+      <button class="btn add" id="mSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- helpers ---------- */
+const C = s => [s,s,s,s,s,s];           // constant across all 6 weeks
+
+/* ---------- WEEK META ---------- */
+const WEEKS = {
+  1:{theme:"Baseline",        note:"Establish loads and recovery response. The run must feel repeatable."},
+  2:{theme:"Add a Little",    note:"Add ONE thing: +1 accessory set OR +5–10s carry. Not everything."},
+  3:{theme:"Controlled Build",note:"Hardest week, still repeatable. Lateral sled drag enters. Don't chase failure on lower."},
+  4:{theme:"Absorption / Deload", note:"Cut lifting volume 30–40%. Keep carries & sleds crisp and easy. This is the decision gate.", deload:true},
+  5:{theme:"Optional Bridge", note:"Rebuild from Week 4 but stay below the Week 3 peak. One variable at a time."},
+  6:{theme:"Optional Readiness", note:"Same volume as Week 5, cleaner execution. Slight carry progression only."},
+};
+
+/* ---------- DECISION GATE ---------- */
+const GATE = {
+  graduate:[
+    "Runna walk-runs completed without feeling wrecked",
+    "Post-run soreness mostly gone within 24h",
+    "Calves / Achilles quiet next morning",
+    "Breathing controlled on easy intervals",
+    "Lower lifting doesn't ruin running",
+    "Carries feel strong and crisp — ready to build, not survive",
+  ],
+  extend:[
+    "Run soreness lasts 36–48h → reduce lower volume",
+    "Easy intervals still feel gassy → keep runs easy, add Zone 2",
+    "Lower body heavy all week → cut lower lifting 30–40%",
+    "Carries cause low-back crankiness → reduce load/duration, fix posture",
+    "Motivation drops → swap conditioning for mobility/walk a week",
+  ],
+  red:[
+    "Soreness >48h → repeat week or deload",
+    "Calf/Achilles tightness changes gait → stop run progression, reduce lower",
+    "Knee/hip ache during runs → shorten intervals, slow pace",
+    "Cooked on waking → walk + mobility only that day",
+    "Any joint/tendon warning persists → do NOT graduate; extend & simplify",
+  ],
+};
+
+/* ---------- PROGRAM ---------- */
+const PROGRAM = {
+  mon:{label:"Upper A",title:"Upper A · Push/Pull + Suitcase Carry",kind:"lift",
+    focus:"Upper hypertrophy, shoulder prep, anti-rotation. Carry is the finisher.",
+    pnote:"Moderate hypertrophy, 1–3 RIR on the big stuff. Carry is the finisher — posture is the rep standard.",
+    blocks:[
+      {ix:"P",name:"Prep",min:"~5 min",kind:"primer",items:[
+        {n:"Scap Push-up",rx:["2×10-12","2×10-12","2×10-12","2×8-10","2×10-12","2×10-12"],rir:"Easy",why:"Serratus + shoulder prep."},
+        {n:"Cable/Band External Rotation",rx:["2×12-15/side","2×12-15/side","2×12-15/side","2×10-12/side","2×12-15/side","2×12-15/side"],rir:"Easy",why:"Rotator-cuff insurance."},
+      ]},
+      {ix:"A",name:"Main Tri-Set",min:"15–20 min",kind:"tri",items:[
+        {l:"A1",n:"Incline DB Press",rx:["3×8-10","3×8-10","3-4×8-10","2×8-10","3×8-10","3×8-10"],rir:"2-3 RIR",why:"Primary chest / pressing hypertrophy."},
+        {l:"A2",n:"Chest-Supported Row",rx:["3×10-12","3×10-12","3-4×10-12","2×10-12","3×10-12","3×10-12"],rir:"2 RIR",why:"Balances pressing; shoulder durability."},
+        {l:"A3",n:"Half-Kneeling Hip-Flexor Stretch",rx:["3×30s/side","3×30s/side","3×30s/side","2×30s/side","3×30s/side","3×30s/side"],rir:"Controlled",why:"Mobility filler — supports running hip extension."},
+      ]},
+      {ix:"B",name:"Hypertrophy Tri-Set",min:"15 min",kind:"tri",items:[
+        {l:"B1",n:"Cable Crossover",rx:["2×12-15","2-3×12-15","3×12-15","2×12-15","2-3×12-15","2-3×12-15"],rir:"1-2 RIR",why:"Pec hypertrophy, joint-friendly."},
+        {l:"B2",n:"Lat Pulldown",rx:["2×10-12","2-3×10-12","3×10-12","2×10-12","2-3×10-12","2-3×10-12"],rir:"1-2 RIR",why:"Lat volume."},
+        {l:"B3",n:"Pallof Press",rx:["2×10/side","2×10/side","3×10/side","2×10/side","3×10/side","3×10/side"],rir:"Easy",why:"Anti-rotation trunk."},
+      ]},
+      {ix:"C",name:"Arms",min:"~8 min",kind:"tri",items:[
+        {l:"C1",n:"Overhead Rope Triceps Ext",rx:["2×12-15","2×12-15","2-3×12-15","Opt 1-2×12-15","2×12-15","2×12-15"],rir:"1-2 RIR",why:"Triceps long head."},
+        {l:"C2",n:"Spider Curl",rx:["2×10-12","2×10-12","2-3×10-12","Opt 1-2×10-12","2×10-12","2×10-12"],rir:"1-2 RIR",why:"Biceps isolation."},
+      ]},
+      {ix:"D",name:"Armor Finisher",min:"~8 min",kind:"cond",items:[
+        {n:"Suitcase Carry",rx:["3×30s/side","3×35-40s/side","4×40s/side","2-3×30s/side","4×35-40s/side","4×40s/side or heavier"],rir:"Crisp",why:"Anti-lateral-flexion; loaded human movement. Posture is the rep standard.",dist:true,time:true},
+      ]},
+    ]},
+
+  tue:{label:"Run",title:"Runna Walk-Run + Mobility",kind:"run",readiness:true,
+    focus:"Running reentry. Embarrassingly easy, repeatable pace. Tissues lag behind cardio.",
+    pnote:"Do your prescribed <b>Runna</b> session. No speed work — easy must feel repeatable. Log distance & time below.",
+    blocks:[
+      {ix:"R",name:"Run",min:"per Runna",kind:"run",items:[
+        {n:"Runna Walk-Run",rx:C("Per Runna · easy / repeatable"),rir:"Easy",why:"Running impact is the new stressor — let tissue catch up to your engine.",dist:true,time:true},
+      ]},
+      {ix:"M",name:"Mobility",min:"~10 min",kind:"primer",items:[
+        {n:"Calves · Tibialis · Hips · Hamstrings",rx:C("10 min flow"),rir:"Controlled",why:"The exact tissues running reentry loads most. Keep them supple.",time:true},
+      ]},
+    ]},
+
+  wed:{label:"Lower A",title:"Lower A · Hypertrophy Lite + Backward Sled",kind:"lift",
+    focus:"Leg-tissue tolerance, hamstrings, knees, sled blood flow. Stimulate, don't assassinate.",
+    pnote:"Lower work stays 2–4 RIR — <b>no failure</b> on squats, lunges or Nordics. This day must not ruin the next run.",
+    blocks:[
+      {ix:"P",name:"Prep",min:"~5 min",kind:"primer",items:[
+        {n:"Tibialis Raise",rx:["2×20","2×20","2×20","2×15-20","2×20","2×20"],rir:"Easy",why:"Shin / ankle prep — balances the calf."},
+        {n:"Cossack Squat Rock",rx:["2×6/side","2×6/side","2×6/side","2×5/side","2×6/side","2×6/side"],rir:"Easy",why:"Adductors + hip mobility."},
+      ]},
+      {ix:"A",name:"Main Tri-Set",min:"15–20 min",kind:"tri",items:[
+        {l:"A1",n:"Belt Squat or Goblet Squat",rx:["3×10","3×10-12","3-4×10-12","2×10","3×10-12","3×10-12"],rir:"3-4 RIR",why:"Knee-dominant hypertrophy without crushing axial load."},
+        {l:"A2",n:"Assisted Nordic / Hamstring Curl",rx:["3×5-6","3×5-6","3×6-8","2×5-6","3×6-8","3×6-8"],rir:"2-4 RIR",why:"Hamstring armor — never sloppy failure."},
+        {l:"A3",n:"Ankle Dorsiflexion Rocks",rx:["3×10/side","3×10/side","3×10/side","2×10/side","3×10/side","3×10/side"],rir:"Controlled",why:"Ankle mobility for running & squatting."},
+      ]},
+      {ix:"B",name:"Support Tri-Set",min:"15 min",kind:"tri",items:[
+        {l:"B1",n:"Reverse Lunge",rx:["2×8/side","2-3×8/side","2-3×8/side","2×6-8/side","2×8/side","2×8/side"],rir:"2-4 RIR",why:"Single-leg strength; gait durability."},
+        {l:"B2",n:"DB RDL",rx:["2×8-10","2-3×8-10","2-3×8-10","2×8","2×8-10","2×8-10"],rir:"3-4 RIR",why:"Posterior chain without max-deadlift stress."},
+        {l:"B3",n:"Side Plank / Copenhagen (short lever)",rx:["2×30s/side","2×30s/side","3×30s/side","2×20-30s/side","2×20s Cope/side","2×20-30s/side"],rir:"Easy",why:"Lateral trunk + adductor durability."},
+      ]},
+      {ix:"D",name:"Sled Armor",min:"~10 min",kind:"cond",items:[
+        {n:"Backward Sled Drag",rx:["6×30yd","7-8×30yd","6-8×30yd","4×30yd easy","6×30yd","6×30yd"],rir:"Mod / Easy W4",why:"Knee-friendly blood flow; quad-tendon capacity, zero impact.",dist:true,time:true},
+        {n:"Lateral Sled Drag",rx:["—","—","2-3×20-30yd/side","—","2×20-30yd/side","2×20-30yd/side"],rir:"Easy-mod",why:"Frontal-plane armor. Enters Week 3.",dist:true},
+      ]},
+    ]},
+
+  thu:{label:"Zone 2",title:"Low-Impact Zone 2 + Mobility",kind:"run",
+    focus:"Aerobic base without impact. Conversational effort only.",
+    pnote:"Bike / row / Ski / incline walk, <b>25–35 min</b> conversational. Optional 3rd Runna run replaces this <i>only</i> if recovery is clean. No threshold work.",
+    blocks:[
+      {ix:"Z",name:"Zone 2",min:"25–35 min",kind:"run",items:[
+        {n:"Bike / Row / SkiErg / Incline Walk",rx:C("25–35 min easy"),rir:"Easy",why:"Builds aerobic base with no extra impact. Conversational pace.",dist:true,time:true},
+      ]},
+      {ix:"M",name:"Mobility",min:"~10 min",kind:"primer",items:[
+        {n:"Full Mobility Flow",rx:C("10 min"),rir:"Controlled",why:"Maintain range; aid recovery between runs.",time:true},
+      ]},
+    ]},
+
+  fri:{label:"Upper B",title:"Upper B · Pull/Push + Farmer Carry",kind:"lift",
+    focus:"Back, arms, delts, grip. The most bodybuilding-oriented day. Farmer carry finisher.",
+    pnote:"Moderate hypertrophy, clean reps. Farmer's carry is the finisher — grip, traps, trunk, posture.",
+    blocks:[
+      {ix:"P",name:"Prep",min:"~5 min",kind:"primer",items:[
+        {n:"Assisted Dead Hang",rx:["2×20-30s","2×20-30s","2×20-30s","2×20s","2×20-30s","2×20-30s"],rir:"Easy",why:"Lats + shoulder decompression."},
+        {n:"Cable Y-Raise",rx:["2×12-15","2×12-15","2×12-15","2×10-12","2×12-15","2×12-15"],rir:"Easy",why:"Lower-trap / scapular health."},
+      ]},
+      {ix:"A",name:"Main Tri-Set",min:"15–20 min",kind:"tri",items:[
+        {l:"A1",n:"Neutral-Grip Pulldown / Pull-up",rx:["3×6-10","3×6-10","3-4×6-10","2×6-10","3×6-10","3×6-10"],rir:"2-3 RIR",why:"Vertical pull — lat width + healthy shoulders."},
+        {l:"A2",n:"Push-up or DB Bench",rx:["3×10-12","3×10-15","3-4×10-15","2×10-12","3×10-15","3×10-15"],rir:"2-3 RIR",why:"Pressing volume."},
+        {l:"A3",n:"Thoracic Rotation",rx:["3×8/side","3×8/side","3×8/side","2×8/side","3×8/side","3×8/side"],rir:"Controlled",why:"T-spine mobility."},
+      ]},
+      {ix:"B",name:"Hypertrophy Tri-Set",min:"15 min",kind:"tri",items:[
+        {l:"B1",n:"Cable Row",rx:["3×10-12","3×10-12","3×10-12","2×10-12","3×10-12","3×10-12"],rir:"1-3 RIR",why:"Back thickness, posture."},
+        {l:"B2",n:"Cable Lateral Raise",rx:["3×12-15","3×12-20","3×12-20","2×12-15","3×12-20","3×12-20"],rir:"1-2 RIR",why:"Delts — width is the athletic look."},
+        {l:"B3",n:"Dead Bug",rx:["3×8/side","3×8/side","3×8/side","2×8/side","3×8/side","3×8/side"],rir:"Easy",why:"Anti-extension trunk."},
+      ]},
+      {ix:"C",name:"Arms",min:"~8 min",kind:"tri",items:[
+        {l:"C1",n:"Rope Pressdown",rx:["2×12-15","2×12-15","3×12-15","2×12-15","2-3×12-15","2-3×12-15"],rir:"1-2 RIR",why:"Triceps."},
+        {l:"C2",n:"Hammer Curl",rx:["2×12-15","2×12-15","3×12-15","2×12-15","2-3×12-15","2-3×12-15"],rir:"1-2 RIR",why:"Biceps / brachialis / grip."},
+      ]},
+      {ix:"D",name:"Armor Finisher",min:"~8 min",kind:"cond",items:[
+        {n:"Farmer's Carry",rx:["4×30s","4×35-40s","5×35-45s","3×30s","4×40s","4×40s or heavier"],rir:"Hard / clean",why:"Grip, traps, trunk — the most transferable durability lift there is.",dist:true,time:true},
+      ]},
+    ]},
+
+  sat:{label:"Run+Armor",title:"Runna Walk-Run + Armor Lite",kind:"run",readiness:true,
+    focus:"Run tolerance plus light armor. Not a secret punishment ritual.",
+    pnote:"Do your <b>Runna</b> session, then light armor only. This is a flush, not a workout after the workout.",
+    blocks:[
+      {ix:"R",name:"Run",min:"per Runna",kind:"run",items:[
+        {n:"Runna Walk-Run",rx:C("Per Runna · easy / repeatable"),rir:"Easy",why:"Second weekly run exposure. Keep it easy.",dist:true,time:true},
+      ]},
+      {ix:"A",name:"Armor Lite",min:"~12 min",kind:"tri",items:[
+        {l:"A1",n:"Bear-Hug Sandbag Carry",rx:["3×30s","3×30-35s","3-4×30-45s","Opt 2×30s","3×40s","3×40s"],rir:"Easy-mod",why:"Anterior trunk + loaded carry.",dist:true,time:true},
+        {l:"A2",n:"Pallof Press",rx:["2×10/side","2×10/side","3×10/side","Opt 2×10/side","3×10/side","3×10/side"],rir:"Easy",why:"Anti-rotation."},
+        {l:"A3",n:"Light Backward Sled Drag",rx:["4×30yd","4×30yd","4-6×30yd","Opt / light","4-6×30yd","4-6×30yd"],rir:"Easy",why:"Flush — clean mechanics, no grind.",dist:true},
+      ]},
+      {ix:"M",name:"Mobility",min:"~5 min",kind:"primer",items:[
+        {n:"Hip-Flexor / Couch Stretch",rx:C("2×45s/side"),rir:"Controlled",why:"Supports running hip extension.",time:true},
+      ]},
+    ]},
+
+  sun:{label:"Recovery",title:"Off · Walk · Mobility",kind:"run",
+    focus:"Recovery is training. Full rest is acceptable.",
+    pnote:"Optional only. If you're cooked, take it. Walking and mobility are the most underrated longevity tools you have.",
+    blocks:[
+      {ix:"R",name:"Recovery Options",min:"as needed",kind:"primer",items:[
+        {n:"Optional Easy Walk",rx:C("20–40 min Zone 1"),rir:"Recovery",why:"Blood flow with zero cost.",dist:true,time:true},
+        {n:"Optional Mobility Flow",rx:C("10–20 min"),rir:"Recovery",why:"Maintain the range you trained all week.",time:true},
+      ]},
+    ]},
+};
+
+const DAY_ORDER = ["mon","tue","wed","thu","fri","sat","sun"];
+const DAY_NAMES = {mon:"Mon",tue:"Tue",wed:"Wed",thu:"Thu",fri:"Fri",sat:"Sat",sun:"Sun"};
+
+/* ---------- STORAGE ---------- */
+const STORE_KEY="dha50_bc_logs_v1", PREF_KEY="dha50_bc_pref_v1";
+function loadLogs(){try{return JSON.parse(localStorage.getItem(STORE_KEY))||{};}catch(e){return{};}}
+function saveLogs(l){try{localStorage.setItem(STORE_KEY,JSON.stringify(l));}catch(e){}}
+function loadPref(){try{return JSON.parse(localStorage.getItem(PREF_KEY))||{};}catch(e){return{};}}
+function savePref(p){try{localStorage.setItem(PREF_KEY,JSON.stringify(p));}catch(e){}}
+let LOGS=loadLogs();
+let PREF=loadPref();
+if(!PREF.wunit)PREF.wunit="lb";
+if(!PREF.dunit)PREF.dunit="mi";
+const FIELDCFG={};   // exId -> which input fields to show
+const RDY_KEY="dha50_bc_ready_v1";
+function loadRdy(){try{return JSON.parse(localStorage.getItem(RDY_KEY))||{};}catch(e){return{};}}
+function saveRdy(r){try{localStorage.setItem(RDY_KEY,JSON.stringify(r));}catch(e){}}
+let RDY=loadRdy();
+
+/* ---------- STATE ---------- */
+let currentWeek = PREF.week || 1;
+let currentDay = PREF.day || "mon";
+const dateInput=document.getElementById("sessionDate");
+function todayStr(){const d=new Date();const o=d.getTimezoneOffset();return new Date(d.getTime()-o*60000).toISOString().slice(0,10);}
+dateInput.value=todayStr();
+dateInput.addEventListener("change",()=>{ if(typeof renderContent==="function") renderContent(); });
+
+function persist(){PREF.week=currentWeek;PREF.day=currentDay;savePref(PREF);}
+
+/* ---------- WEEK SELECTOR ---------- */
+const weeksEl=document.getElementById("weeks");
+function renderWeeks(){
+  weeksEl.innerHTML="";
+  for(let w=1;w<=6;w++){
+    const el=document.createElement("div");
+    el.className="wk"+(w===currentWeek?" active":"")+(WEEKS[w].deload?" deload":"");
+    el.textContent="W"+w;
+    el.onclick=()=>{currentWeek=w;persist();renderWeeks();renderContent();};
+    weeksEl.appendChild(el);
+  }
+}
+
+/* ---------- DAY TABS ---------- */
+const daysEl=document.getElementById("days");
+function renderDays(){
+  daysEl.innerHTML="";
+  DAY_ORDER.forEach(id=>{
+    const p=PROGRAM[id];
+    const el=document.createElement("div");
+    el.className="day"+(id===currentDay?" active":"")+(p.kind==="run"?" run":"");
+    el.innerHTML=`<div class="d">${DAY_NAMES[id]}</div><div class="l">${p.label}</div>`;
+    el.onclick=()=>{currentDay=id;persist();renderDays();renderContent();window.scrollTo({top:0,behavior:"smooth"});};
+    daysEl.appendChild(el);
+  });
+}
+
+/* ---------- DECISION GATE ---------- */
+const gateEl=document.getElementById("gate");
+function renderGate(){
+  gateEl.innerHTML=`
+    <h3>Week-4 Decision Gate</h3>
+    <p class="sub">Week 4 decides: graduate to Phase 2, or extend into the optional 5–6 bridge. The win is absorption, not completion.</p>
+    <div class="col grad"><h4>✓ Graduate if…</h4><ul>${GATE.graduate.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+    <div class="col"><h4>↻ Extend to Weeks 5–6 if…</h4><ul>${GATE.extend.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+    <div class="col red"><h4>⛔ Red-light signals</h4><ul>${GATE.red.map(x=>`<li>${x}</li>`).join("")}</ul></div>`;
+}
+document.getElementById("gateBtn").onclick=()=>{gateEl.classList.toggle("open");if(gateEl.classList.contains("open"))gateEl.scrollIntoView({behavior:"smooth",block:"start"});};
+
+/* ---------- CONTENT ---------- */
+const content=document.getElementById("content");
+function exId(dayId,blockIx,idx){return `${dayId}_${blockIx}_${idx}`;}
+function rxFor(it){return Array.isArray(it.rx)?it.rx[currentWeek-1]:it.rx;}
+
+/* ----- customization layer (add / edit / remove exercises) ----- */
+const CUST_KEY="dha50_bc_custom_v1";
+function loadCust(){try{const c=JSON.parse(localStorage.getItem(CUST_KEY))||{};c.overrides=c.overrides||{};c.hidden=c.hidden||{};c.added=c.added||{};return c;}catch(e){return{overrides:{},hidden:{},added:{}};}}
+function saveCust(){try{localStorage.setItem(CUST_KEY,JSON.stringify(CUST));}catch(e){}}
+let CUST=loadCust();
+const EDITREF={};   // exId -> how to open it for editing
+
+function baseFields(it){return {w:true,r:(!it.dist&&!it.time),d:!!it.dist,t:!!it.time};}
+
+// resolve a base program item + its override into effective display props
+function effBase(it,id){
+  const ov=CUST.overrides[id]||null;
+  const eff={
+    name: ov&&ov.name!=null?ov.name:it.n,
+    rir:  ov&&ov.rir!=null ?ov.rir :(it.rir||""),
+    why:  ov&&ov.why!=null ?ov.why :(it.why||""),
+    fields: ov&&ov.fields?ov.fields:baseFields(it),
+    letter: it.l||"",
+    edited: !!ov,
+  };
+  // prescription for current week: per-week override > constant override > base
+  if(ov&&ov.rxWeek&&ov.rxWeek[currentWeek]!=null) eff.rx=ov.rxWeek[currentWeek];
+  else if(ov&&ov.rx!=null) eff.rx=ov.rx;
+  else eff.rx=Array.isArray(it.rx)?it.rx[currentWeek-1]:it.rx;
+  return eff;
+}
+// effective props for an added exercise
+function effAdded(a){
+  const eff={name:a.name,rir:a.rir||"",why:a.why||"",fields:a.fields||{w:true,r:true,d:false,t:false},letter:"",edited:true,added:true};
+  if(a.rxWeek&&a.rxWeek[currentWeek]!=null) eff.rx=a.rxWeek[currentWeek];
+  else if(a.rx!=null) eff.rx=a.rx;
+  else eff.rx="";
+  return eff;
+}
+function dayHasCustom(day){
+  const pre=day+"_";
+  return (CUST.added[day]&&CUST.added[day].length)
+    || Object.keys(CUST.overrides).some(k=>k.startsWith(pre))
+    || Object.keys(CUST.hidden).some(k=>k.startsWith(pre)&&CUST.hidden[k]);
+}
+function hiddenCountForDay(day){const pre=day+"_";return Object.keys(CUST.hidden).filter(k=>k.startsWith(pre)&&CUST.hidden[k]).length;}
+
+// shared card renderer
+function exCardHTML(id,eff,runc,skip){
+  const entries=LOGS[id]||[];const count=entries.length;
+  FIELDCFG[id]=eff.fields;
+  let rxbits=[];
+  if(eff.rx&&eff.rx!=="—") rxbits.push(`<span><b>${eff.rx}</b></span>`);
+  if(eff.rir) rxbits.push(`<span>${eff.rir}</span>`);
+  return `<div class="ex ${runc}" data-id="${id}" style="${skip?'opacity:.5;':''}">
+    <div class="ex-top" onclick="toggleEx('${id}')">
+      ${eff.letter?`<div class="ex-letter">${eff.letter}</div>`:``}
+      <div class="ex-main">
+        <div class="ex-name">${escapeHtml(eff.name)}${eff.edited?`<span class="custtag">${eff.added?'added':'edited'}</span>`:""}</div>
+        ${rxbits.length?`<div class="ex-rx">${rxbits.join("")}</div>`:""}
+        ${eff.why?`<div class="ex-why">${escapeHtml(eff.why)}</div>`:""}
+      </div>
+      <div class="ex-cta">
+        <button class="editbtn" onclick="event.stopPropagation();openEdit('${id}')" title="Edit">✎</button>
+        <span class="logcount ${count?'has':''}">${count?count+" logged":""}</span>
+        <span class="chev">▸</span>
+      </div>
+    </div>
+    <div class="logger" id="log_${id}"></div>
+  </div>`;
+}
+
+function renderContent(){
+  const p=PROGRAM[currentDay];
+  const wk=WEEKS[currentWeek];
+  const isRun=p.kind==="run";
+  let html=`<div class="dayhead">
+    <div class="kick ${isRun?'run':''}">${DAY_NAMES[currentDay]} · Week ${currentWeek}</div>
+    <h2>${p.title}</h2>
+    <div class="focus">${p.focus}</div>
+    <div class="weeknote ${wk.deload?'deload':''}"><b>Week ${currentWeek} — ${wk.theme}.</b> ${wk.note}</div>
+  </div>`;
+
+  if(p.pnote) html+=`<div class="pnote ${isRun?'run':''}">${p.pnote}</div>`;
+  if(p.readiness) html+=readinessCardHTML();
+
+  p.blocks.forEach(block=>{
+    const bc=block.kind==='tri'?'tri':block.kind==='cond'?'cond':block.kind==='run'?'run':'';
+    const runc=(block.kind==='run')?'runcard':'';
+    let body="";
+    block.items.forEach((it,idx)=>{
+      const id=exId(currentDay,block.ix,idx);
+      if(CUST.hidden[id]) return;                         // removed by user
+      EDITREF[id]={day:currentDay,blockIx:block.ix,idx};
+      const eff=effBase(it,id);
+      const skip=(eff.rx==="—");
+      body+=exCardHTML(id,eff,runc,skip);
+    });
+    if(body) html+=`<div class="block ${bc}"><div class="block-h"><span class="ix">${block.ix}</span><h3>${block.name}</h3>${block.min?`<span class="min">${block.min}</span>`:""}</div>${body}</div>`;
+  });
+
+  // user-added exercises for this day
+  const added=CUST.added[currentDay]||[];
+  if(added.length){
+    let body="";
+    added.forEach(a=>{
+      EDITREF[a.id]={day:currentDay,added:true};
+      body+=exCardHTML(a.id,effAdded(a),"",false);
+    });
+    html+=`<div class="block tri"><div class="block-h"><span class="ix">+</span><h3>Custom / Added</h3></div>${body}</div>`;
+  }
+
+  // day tools
+  const hc=hiddenCountForDay(currentDay);
+  html+=`<div class="daytools">
+    <button class="btn add" onclick="openAdd()">+ Add Exercise</button>
+    ${hc?`<button class="btn ghost" onclick="restoreRemoved()">Restore Removed (${hc})</button>`:""}
+    ${dayHasCustom(currentDay)?`<button class="btn ghost" onclick="resetDay()">↺ Reset Day</button>`:""}
+  </div>`;
+
+  content.innerHTML=html;
+  if(document.getElementById("readyCard")) onRdySlide();
+}
+
+/* ---------- LOGGER ---------- */
+function toggleEx(id){
+  const ex=document.querySelector(`.ex[data-id="${id}"]`);
+  if(!ex)return;
+  if(ex.classList.contains("open")){ex.classList.remove("open");}
+  else{ex.classList.add("open");buildLogger(id);}
+}
+function buildLogger(id){
+  const box=document.getElementById("log_"+id);
+  if(!box)return;
+  box.innerHTML=`
+    <div id="rows_${id}"></div>
+    <input class="noteinput" id="note_${id}" placeholder="Notes — how it felt, pace, soreness, energy, pain…">
+    <div class="logbtns">
+      <button class="btn" onclick="addRow('${id}')">+ Set</button>
+      <button class="btn add" onclick="saveEntry('${id}')">Save Session</button>
+      <span class="saved" id="saved_${id}">Saved ✓</span>
+    </div>
+    <div class="hist" id="hist_${id}"></div>`;
+  const startRows=(FIELDCFG[id] && FIELDCFG[id].r)?3:2; // lifts want a few sets; runs/carries fewer
+  for(let i=0;i<startRows;i++)addRow(id);
+  renderHistory(id);
+}
+function addRow(id){
+  const rows=document.getElementById("rows_"+id); if(!rows)return;
+  const cfg=FIELDCFG[id]||{w:true,r:true,d:false,t:false};
+  const wu=PREF.wunit||"lb", du=PREF.dunit||"mi";
+  const n=rows.children.length+1;
+  let f="";
+  if(cfg.w) f+=`<div class="field"><label>Weight</label><div class="inunit"><input type="text" inputmode="decimal" placeholder="–" data-f="w"><span>${wu}</span></div></div>`;
+  if(cfg.r) f+=`<div class="field"><label>Reps</label><input type="text" inputmode="numeric" placeholder="–" data-f="r"></div>`;
+  if(cfg.d) f+=`<div class="field"><label>Dist</label><div class="inunit"><input type="text" inputmode="decimal" placeholder="–" data-f="d"><span>${du}</span></div></div>`;
+  if(cfg.t) f+=`<div class="field"><label>Time</label><div class="timegrp">`+
+    `<input type="text" inputmode="numeric" placeholder="0" maxlength="2" data-f="th"><span>h</span>`+
+    `<input type="text" inputmode="numeric" placeholder="0" maxlength="2" data-f="tm"><span>m</span>`+
+    `<input type="text" inputmode="numeric" placeholder="0" maxlength="2" data-f="ts"><span>s</span></div></div>`;
+  const row=document.createElement("div");
+  row.className="setrow";
+  row.innerHTML=`<span class="sn">${n}</span>${f}<button class="del" onclick="this.parentNode.remove();renumber('${id}')">×</button>`;
+  rows.appendChild(row);
+}
+function renumber(id){const rows=document.getElementById("rows_"+id);if(!rows)return;[...rows.children].forEach((r,i)=>{r.querySelector(".sn").textContent=i+1;});}
+function saveEntry(id){
+  const rows=document.getElementById("rows_"+id);
+  const note=document.getElementById("note_"+id).value.trim();
+  const sets=[];
+  [...rows.children].forEach(r=>{
+    const g=f=>{const el=r.querySelector(`[data-f="${f}"]`);return el?el.value.trim():"";};
+    const w=g("w"),rp=g("r"),d=g("d"),th=g("th"),tm=g("tm"),ts=g("ts");
+    const hasTime=th||tm||ts;
+    if(w||rp||d||hasTime){
+      const set={w,r:rp,d};
+      if(hasTime)set.t={h:th,m:tm,s:ts};
+      sets.push(set);
+    }
+  });
+  if(!sets.length&&!note)return;
+  if(!LOGS[id])LOGS[id]=[];
+  LOGS[id].unshift({date:dateInput.value,week:currentWeek,wu:PREF.wunit||"lb",du:PREF.dunit||"mi",sets,note});
+  saveLogs(LOGS);
+  const s=document.getElementById("saved_"+id);s.classList.add("show");setTimeout(()=>s.classList.remove("show"),1600);
+  renderCount(id);
+  [...rows.children].forEach(r=>r.querySelectorAll("input").forEach(i=>i.value=""));
+  document.getElementById("note_"+id).value="";
+  renderHistory(id);
+}
+function renderCount(id){const e=document.querySelector(`.ex[data-id="${id}"] .logcount`);if(e){const c=(LOGS[id]||[]).length;e.textContent=c?c+" logged":"";e.classList.toggle("has",!!c);}}
+function fmtTime(t){
+  if(!t)return"";
+  if(typeof t==="string")return t;               // legacy free-text time
+  const h=parseInt(t.h||0,10)||0,m=parseInt(t.m||0,10)||0,s=parseInt(t.s||0,10)||0;
+  if(h>0)return `${h}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  if(m>0)return `${m}:${String(s).padStart(2,"0")}`;
+  if(s>0)return `${s}s`;
+  return"";
+}
+function renderHistory(id){
+  const h=document.getElementById("hist_"+id);if(!h)return;
+  const entries=LOGS[id]||[];
+  if(!entries.length){h.innerHTML="";return;}
+  let html=`<h5>History</h5>`;
+  entries.slice(0,10).forEach((e,ei)=>{
+    const wu=e.wu?" "+e.wu:"", du=e.du?" "+e.du:"";
+    const setStr=e.sets.map(s=>{
+      let parts=[];
+      if(s.w)parts.push(s.w+wu);
+      if(s.r)parts.push("×"+s.r);
+      let main=parts.join(" ");
+      let extra=[];
+      if(s.d)extra.push(s.d+du);
+      const tt=fmtTime(s.t);if(tt)extra.push(tt);
+      if(extra.length)main+=(main?" · ":"")+extra.join(" ");
+      return main||"—";
+    }).join("   |   ");
+    html+=`<div class="histrow">
+      <span class="hd">${fmtDate(e.date)}</span>
+      ${e.week?`<span class="wkpill">W${e.week}</span>`:""}
+      <span>${setStr}</span>
+      ${e.note?`<span class="hn">— ${escapeHtml(e.note)}</span>`:""}
+      <button class="del" style="margin-left:auto" onclick="delEntry('${id}',${ei})">×</button>
+    </div>`;
+  });
+  h.innerHTML=html;
+}
+function delEntry(id,ei){if(!LOGS[id])return;LOGS[id].splice(ei,1);if(!LOGS[id].length)delete LOGS[id];saveLogs(LOGS);renderCount(id);renderHistory(id);}
+function fmtDate(s){if(!s)return"";const[y,m,d]=s.split("-");const mo=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][parseInt(m,10)-1];return `${mo} ${parseInt(d,10)}`;}
+function escapeHtml(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+
+/* ---------- EXPORT / IMPORT ---------- */
+document.getElementById("exportBtn").onclick=()=>{
+  const blob=new Blob([JSON.stringify(LOGS,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");
+  a.href=url;a.download=`dha50-basecamp-${todayStr()}.json`;a.click();URL.revokeObjectURL(url);
+};
+const importFile=document.getElementById("importFile");
+document.getElementById("importBtn").onclick=()=>importFile.click();
+importFile.onchange=e=>{
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{const data=JSON.parse(r.result);
+    if(confirm("Merge imported data into your current logs?")){
+      Object.keys(data).forEach(k=>{LOGS[k]=(LOGS[k]||[]).concat(data[k]);});
+      saveLogs(LOGS);renderContent();alert("Imported.");
+    }}catch(err){alert("Could not read that file.");}};
+  r.readAsText(f);importFile.value="";
+};
+
+/* ---------- READINESS CHECK-IN ---------- */
+const RDY_Q=[
+  {k:"sore",  nm:"Post-run soreness",      lo:"Gone <24h",   hi:"Lingers 48h+"},
+  {k:"calf",  nm:"Calves / Achilles",      lo:"Quiet",       hi:"Tight · gait off"},
+  {k:"breath",nm:"Easy-run breathing",     lo:"Controlled",  hi:"Gassy"},
+  {k:"legs",  nm:"Lower body / legs",      lo:"Fresh",       hi:"Heavy all week"},
+  {k:"sleep", nm:"Sleep / morning feel",   lo:"Rested",      hi:"Cooked on waking"},
+];
+const RDY_VALWORDS=["Great","Good","OK","Off","Bad"];
+function rdyKey(){return `${dateInput.value}_${currentDay}`;}
+
+function verdict(vals){
+  const total=vals.sore+vals.calf+vals.breath+vals.legs+vals.sleep;
+  // tendon / recovery red-light overrides everything (gate logic)
+  if(vals.calf>=3 || vals.sore>=4 || vals.sleep>=4 || total>=12){
+    return {level:"red",tag:"Red Light — Back Off",
+      txt:"Repeat the week or deload. If calves/Achilles changed your gait, stop run progression and cut lower work. If you're cooked, today is walk + mobility only."};
+  }
+  if(total>=6 || vals.sore>=3 || vals.calf>=2 || vals.legs>=3){
+    return {level:"amber",tag:"Hold Steady — Don't Progress",
+      txt:"Repeat this week's doses. Keep runs easy and repeatable; trim lower volume if legs feel heavy. Extend rather than push. Absorption > completion."};
+  }
+  return {level:"green",tag:"Green — Clear to Progress",
+    txt:"Clean. Progress ONE variable this week, or earn a 3rd run by replacing Thursday Zone 2 — never add a run and lower volume together."};
+}
+
+function readinessCardHTML(){
+  const saved=RDY[rdyKey()];
+  const v=saved?saved.vals:{sore:0,calf:0,breath:0,legs:0,sleep:0};
+  const vd=verdict(v);
+  let sliders=RDY_Q.map(q=>`
+    <div class="slider">
+      <div class="slab"><span class="nm">${q.nm}</span><span class="val" id="rv_${q.k}"></span></div>
+      <input type="range" min="0" max="4" step="1" value="${v[q.k]}" data-rk="${q.k}" oninput="onRdySlide()">
+      <div class="ends"><span>${q.lo}</span><span>${q.hi}</span></div>
+    </div>`).join("");
+  // recent history (last 3 for this day)
+  const hist=Object.values(RDY).filter(e=>e.day===currentDay).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,3);
+  const histHTML=hist.length?`<div class="rhist">Recent: ${hist.map(e=>`${fmtDate(e.date)} <b>${e.level.toUpperCase()}</b>`).join(" · ")}</div>`:"";
+  return `<div class="ready" id="readyCard">
+    <div class="ready-h"><h3>Readiness Check-In</h3>${saved?`<span class="donepill">saved ✓</span>`:""}</div>
+    <p class="sub">Honest read before you run. Drag each toward how you actually feel — the call updates live.</p>
+    ${sliders}
+    <div class="verdict ${vd.level}" id="rdyVerdict"><span class="vtag">${vd.tag}</span><div class="vtxt">${vd.txt}</div></div>
+    <div class="savebar"><button class="btn add" onclick="saveRdyEntry()">Save Check-In</button>
+      <span class="saved" id="rdySaved">Saved ✓</span></div>
+    ${histHTML}
+  </div>`;
+}
+
+function readVals(){
+  const v={};
+  document.querySelectorAll('#readyCard input[type=range]').forEach(s=>{v[s.dataset.rk]=+s.value;});
+  return v;
+}
+function onRdySlide(){
+  const v=readVals();
+  RDY_Q.forEach(q=>{const el=document.getElementById("rv_"+q.k);
+    if(el){const val=v[q.k];el.textContent=RDY_VALWORDS[val];
+      el.style.color=val<=1?"var(--green)":val===2?"var(--amber)":"var(--oxblood)";}});
+  const vd=verdict(v);
+  const box=document.getElementById("rdyVerdict");
+  if(box){box.className="verdict "+vd.level;box.innerHTML=`<span class="vtag">${vd.tag}</span><div class="vtxt">${vd.txt}</div>`;}
+}
+function saveRdyEntry(){
+  const v=readVals();const vd=verdict(v);
+  RDY[rdyKey()]={date:dateInput.value,day:currentDay,week:currentWeek,vals:v,level:vd.level};
+  saveRdy(RDY);
+  const s=document.getElementById("rdySaved");if(s){s.classList.add("show");setTimeout(()=>s.classList.remove("show"),1600);}
+  const dp=document.querySelector("#readyCard .donepill");
+  if(!dp){const h=document.querySelector("#readyCard .ready-h");if(h){const sp=document.createElement("span");sp.className="donepill";sp.textContent="saved ✓";h.appendChild(sp);}}
+}
+
+/* ---------- ADD / EDIT / REMOVE EXERCISES ---------- */
+const modal=document.getElementById("modal");
+let MCTX=null; // {mode:'add'|'editBase'|'editAdded', id, hasOverride}
+
+function setChips(fields){document.querySelectorAll('#mFields .chip').forEach(c=>c.classList.toggle('on',!!fields[c.dataset.f]));}
+function readChips(){const f={};document.querySelectorAll('#mFields .chip').forEach(c=>{if(c.classList.contains('on'))f[c.dataset.f]=true;});if(!Object.keys(f).length)f.w=true;return f;}
+document.querySelectorAll('#mFields .chip').forEach(c=>c.onclick=()=>c.classList.toggle('on'));
+function setScope(s){document.querySelectorAll('#mScope button').forEach(b=>b.classList.toggle('on',b.dataset.s===s));}
+function getScope(){const b=document.querySelector('#mScope button.on');return b?b.dataset.s:'all';}
+document.querySelectorAll('#mScope button').forEach(b=>b.onclick=()=>setScope(b.dataset.s));
+function openModal(){modal.classList.add("open");}
+function closeModal(){modal.classList.remove("open");MCTX=null;}
+document.getElementById("mCancel").onclick=closeModal;
+modal.addEventListener("click",e=>{if(e.target===modal)closeModal();});
+
+function fillModal({title,name,rx,rir,why,fields,scope}){
+  document.getElementById("mTitle").textContent=title;
+  document.getElementById("mName").value=name||"";
+  document.getElementById("mRx").value=(rx&&rx!=="—")?rx:"";
+  document.getElementById("mRir").value=rir||"";
+  document.getElementById("mWhy").value=why||"";
+  setChips(fields||{w:true,r:true});
+  setScope(scope||"all");
+}
+
+function openEdit(id){
+  const ref=EDITREF[id]; if(!ref)return;
+  if(ref.added){
+    const a=(CUST.added[ref.day]||[]).find(x=>x.id===id); if(!a)return;
+    MCTX={mode:"editAdded",id,day:ref.day};
+    const eff=effAdded(a);
+    MCTX.origRx=(eff.rx&&eff.rx!=="—")?eff.rx:"";
+    fillModal({title:"Edit Exercise",name:eff.name,rx:eff.rx,rir:eff.rir,why:eff.why,fields:eff.fields,scope:"all"});
+    document.getElementById("mRemove").style.display="";
+    document.getElementById("mRemove").textContent="Delete";
+    document.getElementById("mReset").style.display="none";
+  } else {
+    const it=PROGRAM[ref.day].blocks.find(b=>b.ix===ref.blockIx).items[ref.idx];
+    const eff=effBase(it,id);
+    const hasOv=!!CUST.overrides[id];
+    MCTX={mode:"editBase",id,day:ref.day,hasOverride:hasOv};
+    MCTX.origRx=(eff.rx&&eff.rx!=="—")?eff.rx:"";
+    fillModal({title:"Edit Exercise",name:eff.name,rx:eff.rx,rir:eff.rir,why:eff.why,fields:eff.fields,scope:"all"});
+    document.getElementById("mRemove").style.display="";
+    document.getElementById("mRemove").textContent="Remove";
+    document.getElementById("mReset").style.display=hasOv?"":"none";
+  }
+  openModal();
+}
+
+function openAdd(){
+  MCTX={mode:"add",day:currentDay};
+  fillModal({title:"Add Exercise",name:"",rx:"",rir:"",why:"",fields:{w:true,r:true},scope:"all"});
+  document.getElementById("mRemove").style.display="none";
+  document.getElementById("mReset").style.display="none";
+  openModal();
+}
+
+document.getElementById("mSave").onclick=()=>{
+  if(!MCTX)return;
+  const name=document.getElementById("mName").value.trim();
+  const rx=document.getElementById("mRx").value.trim();
+  const rir=document.getElementById("mRir").value.trim();
+  const why=document.getElementById("mWhy").value.trim();
+  const fields=readChips();
+  const scope=getScope();
+  const rxChanged=(rx!==(MCTX.origRx||""));
+  if(!name){alert("Give the exercise a name.");return;}
+
+  if(MCTX.mode==="add"){
+    const a={id:`cust-${MCTX.day}-${Date.now()}`,name,rir,why,fields};
+    if(scope==="week")a.rxWeek={[currentWeek]:rx}; else a.rx=rx;
+    (CUST.added[MCTX.day]=CUST.added[MCTX.day]||[]).push(a);
+  } else if(MCTX.mode==="editAdded"){
+    const a=(CUST.added[MCTX.day]||[]).find(x=>x.id===MCTX.id); if(a){
+      a.name=name;a.rir=rir;a.why=why;a.fields=fields;
+      if(rxChanged){if(scope==="week"){a.rxWeek=a.rxWeek||{};a.rxWeek[currentWeek]=rx;} else {a.rx=rx;a.rxWeek=null;}}
+    }
+  } else { // editBase
+    const ov=CUST.overrides[MCTX.id]||{};
+    ov.name=name;ov.rir=rir;ov.why=why;ov.fields=fields;
+    if(rxChanged){if(scope==="week"){ov.rxWeek=ov.rxWeek||{};ov.rxWeek[currentWeek]=rx;} else {ov.rx=rx;ov.rxWeek=null;}}
+    CUST.overrides[MCTX.id]=ov;
+    if(CUST.hidden[MCTX.id])delete CUST.hidden[MCTX.id];
+  }
+  saveCust();closeModal();renderContent();
+};
+
+document.getElementById("mRemove").onclick=()=>{
+  if(!MCTX)return;
+  if(MCTX.mode==="editAdded"){
+    if(!confirm("Delete this added exercise? Its logs stay saved but it won't show on the day."))return;
+    CUST.added[MCTX.day]=(CUST.added[MCTX.day]||[]).filter(x=>x.id!==MCTX.id);
+  } else if(MCTX.mode==="editBase"){
+    if(!confirm("Remove this exercise from the day? You can restore it later."))return;
+    CUST.hidden[MCTX.id]=true;
+  } else return;
+  saveCust();closeModal();renderContent();
+};
+
+document.getElementById("mReset").onclick=()=>{
+  if(!MCTX||MCTX.mode!=="editBase")return;
+  delete CUST.overrides[MCTX.id];delete CUST.hidden[MCTX.id];
+  saveCust();closeModal();renderContent();
+};
+
+function restoreRemoved(){
+  const pre=currentDay+"_";
+  Object.keys(CUST.hidden).forEach(k=>{if(k.startsWith(pre))delete CUST.hidden[k];});
+  saveCust();renderContent();
+}
+function resetDay(){
+  if(!confirm("Reset this day back to the original plan? Removes your adds, edits and removals for "+DAY_NAMES[currentDay]+". Saved logs are kept."))return;
+  const pre=currentDay+"_";
+  Object.keys(CUST.overrides).forEach(k=>{if(k.startsWith(pre))delete CUST.overrides[k];});
+  Object.keys(CUST.hidden).forEach(k=>{if(k.startsWith(pre))delete CUST.hidden[k];});
+  CUST.added[currentDay]=[];
+  saveCust();renderContent();
+}
+
+/* ---------- UNIT TOGGLES ---------- */
+function renderUnitToggles(){
+  document.querySelectorAll('#wToggle button').forEach(b=>b.classList.toggle('on',b.dataset.u===(PREF.wunit||'lb')));
+  document.querySelectorAll('#dToggle button').forEach(b=>b.classList.toggle('on',b.dataset.u===(PREF.dunit||'mi')));
+}
+document.querySelectorAll('#wToggle button').forEach(b=>b.onclick=()=>{PREF.wunit=b.dataset.u;savePref(PREF);renderUnitToggles();renderContent();});
+document.querySelectorAll('#dToggle button').forEach(b=>b.onclick=()=>{PREF.dunit=b.dataset.u;savePref(PREF);renderUnitToggles();renderContent();});
+
+/* ---------- INIT ---------- */
+renderUnitToggles();renderWeeks();renderDays();renderGate();renderContent();
+</script>
+</body>
+</html>
